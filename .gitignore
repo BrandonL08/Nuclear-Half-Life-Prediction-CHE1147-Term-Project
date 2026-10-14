@@ -1,0 +1,19 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# Jupyter temporary files
+.ipynb_checkpoints/
+
+# Local datasets and generated results
+data/*
+!data/README.md
+results/*
+!results/.gitkeep
+
+# Environment variables
+.env
