@@ -1,1 +1,274 @@
 print("Hello world")
+
+import zipfile
+import re
+import csv
+from pathlib import Path
+
+ZIP_FILE = "C:\\Users\\brayd\\OneDrive - University of Toronto\\Classes\\CHE1147\\Assignments\\Term Project\\ensdf_261001.zip"
+
+# Atomic number for each element symbol.
+symbols = [
+    "", "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne",
+    "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca",
+    "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn",
+    "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr",
+    "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn",
+    "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd",
+    "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb",
+    "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg",
+    "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th",
+    "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm",
+    "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds",
+    "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"
+]
+
+Z_BY_SYMBOL = {
+    symbol.upper(): z
+    for z, symbol in enumerate(symbols)
+    if symbol
+}
+
+# Time-unit conversion factors to seconds.
+SECONDS_PER_UNIT = {
+    "AS": 1e-18,
+    "FS": 1e-15,
+    "PS": 1e-12,
+    "NS": 1e-9,
+    "US": 1e-6,
+    "MS": 1e-3,
+    "S": 1,
+    "M": 60,
+    "H": 3600,
+    "D": 86400,
+    "Y": 365.25 * 86400,
+    "YR": 365.25 * 86400,
+}
+
+
+def is_dataset_header(line):
+    """Recognize a dataset identification record."""
+    return (
+        len(line) >= 39
+        and line[5:9].strip() == ""
+        and bool(line[9:39].strip())
+    )
+
+
+def record_type(line):
+    """Read the record type for a primary record."""
+    if len(line) < 8 or line[6] != " ":
+        return ""
+    return line[7]
+
+
+def parse_number(field):
+    """Read a simple numeric field; leave unrecognized values missing."""
+    field = field.strip()
+
+    if not field:
+        return None
+
+    # Do not silently interpret limits or questionable values as exact.
+    if any(mark in field for mark in ("<", ">", "?", "~")):
+        return None
+
+    match = re.fullmatch(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)", field)
+    return float(match.group()) if match else None
+
+
+def parse_half_life(field):
+    """
+    Preserve the original field and convert ordinary recognized values
+    to seconds. Special notation remains flagged for later review.
+    """
+    raw = field.strip()
+
+    if not raw:
+        return raw, None, None, None, "missing"
+
+    if "STABLE" in raw.upper():
+        return raw, None, None, None, "stable"
+
+    match = re.search(
+        r"([-+]?(?:\d+(?:\.\d*)?|\.\d+))\s*([A-Za-z]+)",
+        raw
+    )
+
+    if not match:
+        return raw, None, None, None, "review"
+
+    value = float(match.group(1))
+    unit = match.group(2).upper()
+
+    # Special markers can indicate approximate, limiting, or uncertain data.
+    if any(mark in raw for mark in ("<", ">", "?", "~")):
+        return raw, value, unit, None, "review"
+
+    if unit not in SECONDS_PER_UNIT:
+        return raw, value, unit, None, "unknown_unit"
+
+    return (
+        raw,
+        value,
+        unit,
+        value * SECONDS_PER_UNIT[unit],
+        "finite"
+    )
+
+
+def parse_nuclide(nucid):
+    """Convert an identifier such as 162TB into A, Z, and N."""
+    match = re.fullmatch(r"(\d+)([A-Za-z]{1,2})", nucid.strip())
+
+    if not match:
+        return None
+
+    A = int(match.group(1))
+    symbol = match.group(2).upper()
+    Z = Z_BY_SYMBOL.get(symbol)
+
+    if Z is None:
+        return None
+
+    N = A - Z
+    return A, symbol, Z, N
+
+
+def split_datasets(lines):
+    """Split one mass file at dataset identification records."""
+    datasets = []
+    current_header = None
+    current_lines = []
+
+    for line in lines:
+        if is_dataset_header(line):
+            if current_header is not None:
+                datasets.append((current_header, current_lines))
+
+            current_header = line
+            current_lines = []
+        elif current_header is not None:
+            current_lines.append(line)
+
+    if current_header is not None:
+        datasets.append((current_header, current_lines))
+
+    return datasets
+
+
+def extract_dataset(header, records):
+    """Extract one adopted-level dataset into one candidate row."""
+    dataset_name = header[9:39].strip()
+
+    if not dataset_name.upper().startswith("ADOPTED LEVELS"):
+        return None
+
+    nucid = header[:5].strip()
+    identity = parse_nuclide(nucid)
+
+    if identity is None:
+        return None
+
+    A, symbol, Z, N = identity
+
+    # Find ground-state level records.
+    ground_candidates = []
+
+    for line in records:
+        if record_type(line) != "L":
+            continue
+
+        energy = parse_number(line[9:19])
+
+        if energy is not None and abs(energy) < 1e-9:
+            raw_t = line[39:49]
+            t_raw, t_value, t_unit, t_seconds, t_status = (
+                parse_half_life(raw_t)
+            )
+
+            ground_candidates.append({
+                "ground_energy_keV": energy,
+                "spin_parity_raw": line[21:39].strip(),
+                "half_life_raw": t_raw,
+                "half_life_value": t_value,
+                "half_life_unit": t_unit,
+                "half_life_seconds": t_seconds,
+                "half_life_status": t_status,
+            })
+
+    if len(ground_candidates) == 0:
+        return None
+
+    # Don't silently choose if the dataset has multiple E=0 candidates.
+    ground = ground_candidates[0]
+    ground_ambiguous = len(ground_candidates) > 1
+
+    # Find the first primary Q record.
+    q_values = {
+        "Q_beta_keV": None,
+        "S_n_keV": None,
+        "S_p_keV": None,
+        "Q_alpha_keV": None,
+    }
+
+    for line in records:
+        if record_type(line) == "Q":
+            q_values = {
+                "Q_beta_keV": parse_number(line[9:19]),
+                "S_n_keV": parse_number(line[21:29]),
+                "S_p_keV": parse_number(line[31:39]),
+                "Q_alpha_keV": parse_number(line[41:49]),
+            }
+            break
+
+    return {
+        "nuclide": nucid,
+        "element": symbol,
+        "Z": Z,
+        "A": A,
+        "N": N,
+        "dataset_name": dataset_name,
+        **ground,
+        **q_values,
+        "ground_state_ambiguous": ground_ambiguous,
+        "ground_state_candidate_count": len(ground_candidates),
+    }
+
+
+def extract_all_mass_files():
+    """Run the extraction across ensdf.001 through ensdf.300."""
+    rows = []
+    errors = []
+
+    with zipfile.ZipFile(ZIP_FILE, "r") as archive:
+        available = set(archive.namelist())
+
+        for mass_number in range(1, 301):
+            filename = f"ensdf.{mass_number:03d}"
+
+            if filename not in available:
+                errors.append({
+                    "file": filename,
+                    "problem": "file_not_found_in_zip"
+                })
+                continue
+
+            try:
+                text = archive.read(filename).decode("latin-1")
+                lines = text.splitlines()
+
+                for header, records in split_datasets(lines):
+                    row = extract_dataset(header, records)
+
+                    if row is not None:
+                        row["source_file"] = filename
+                        rows.append(row)
+
+            except Exception as error:
+                errors.append({
+                    "file": filename,
+                    "problem": str(error)
+                })
+
+    return rows, errors

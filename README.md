@@ -4,4 +4,4 @@
 This project uses machine learning to predict the half-life of radioactive nuclides.
 
 ## Group Members
-Brayden Hutchinson, Jin Won Choi, Brandon Lau
+Brayden Hutchinson, JinWon Choi, Brandon Lau
