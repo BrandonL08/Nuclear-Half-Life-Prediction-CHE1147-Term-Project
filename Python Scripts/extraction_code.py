@@ -11,9 +11,12 @@ import csv
 import re
 from pathlib import Path
 
-# Locate the ZIP file in the same folder as this Python script.
-SCRIPT_DIR = Path.cwd()
-ZIP_FILE = SCRIPT_DIR / "ensdf_261001.zip"
+# Project directories
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+EXTRACTION_DIR = PROJECT_DIR / "Extraction"
+
+# Input ZIP file
+ZIP_FILE = EXTRACTION_DIR / "ensdf_261001.zip"
 
 # Check that the ZIP file exists.
 if not ZIP_FILE.is_file():

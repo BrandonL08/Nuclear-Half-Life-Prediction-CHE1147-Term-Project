@@ -54,11 +54,12 @@ print("Random seed:", RANDOM_SEED)
 # Load the extracted ENSDF dataset while preserving missing feature values.
 
 # %%
-df = pd.read_csv(
-    "../ensdf_ground_state_candidates.csv",
-    keep_default_na=False,
-    na_values=[""]
-)
+# Import Data
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+EXTRACTION_DIR = PROJECT_DIR / "Extraction"
+INPUT_FILE = EXTRACTION_DIR / "extracted_data.csv"
+
+df = pd.read_csv(INPUT_FILE, keep_default_na=False, na_values=[""])
 
 print("Dataset shape:", df.shape)
 display(df.head())

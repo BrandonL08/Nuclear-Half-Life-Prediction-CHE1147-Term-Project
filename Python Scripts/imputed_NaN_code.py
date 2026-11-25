@@ -49,10 +49,8 @@ from sklearn.metrics import (
 
 
 # Plotting
-import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
-%matplotlib inline
 
 
 # %%
@@ -60,9 +58,10 @@ from matplotlib.colors import LogNorm
 RANDOM_SEED = 1
 np.random.seed(RANDOM_SEED)
 
-# Drop features, use cleaned_data.csv since we're using a pipeline that will impute missing values
-DATA_DIR = Path.cwd().parent / "EDA"
-INPUT_FILE = DATA_DIR / "cleaned_data.csv"
+# Import Data
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+EDA_DIR = PROJECT_DIR / "EDA"
+INPUT_FILE = EDA_DIR / "cleaned_data.csv"
 
 eda_df = pd.read_csv(INPUT_FILE, keep_default_na=False, na_values=[""])
 eda_df = eda_df.drop(columns=['Z', 'N'])

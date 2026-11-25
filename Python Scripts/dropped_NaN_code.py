@@ -45,8 +45,9 @@ RANDOM_SEED = 1
 np.random.seed(RANDOM_SEED)
 
 # Import Data
-DATA_DIR = Path.cwd().parent / "EDA"
-INPUT_FILE = DATA_DIR / "cleaned_data.csv"
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+EDA_DIR = PROJECT_DIR / "EDA"
+INPUT_FILE = EDA_DIR / "cleaned_data.csv"
 
 df = pd.read_csv(INPUT_FILE, keep_default_na=False, na_values=[""])
 

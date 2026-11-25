@@ -14,9 +14,16 @@ from matplotlib.ticker import FuncFormatter, MaxNLocator
 import numpy as np
 import pandas as pd
 
-EDA_DIR = Path.cwd()
-EXTRACTED_CSV = EDA_DIR.parent / "Extraction" / "extracted_data.csv"
+# Project directories
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+EXTRACTION_DIR = PROJECT_DIR / "Extraction"
+EDA_DIR = PROJECT_DIR / "EDA"
+
+# Input files
+EXTRACTED_CSV = EXTRACTION_DIR / "extracted_data.csv"
 CLEANED_CSV = EDA_DIR / "cleaned_data.csv"
+
+# Output directory for figures
 FIGURE_DIR = EDA_DIR / "figures"
 SAVE_FIGURES = True
 SHOW_PLOTS = True

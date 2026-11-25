@@ -14,9 +14,12 @@ import numpy as np
 import pandas as pd
 
 
-EDA_DIR = Path.cwd()
-EXTRACTION_DIR = EDA_DIR.parent / "Extraction"
+# Project directories
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+EXTRACTION_DIR = PROJECT_DIR / "Extraction"
+EDA_DIR = PROJECT_DIR / "EDA"
 
+# Input and output files
 INPUT_FILE = EXTRACTION_DIR / "extracted_data.csv"
 OUTPUT_FILE = EDA_DIR / "cleaned_data.csv"
 
