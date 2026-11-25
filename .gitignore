@@ -1,19 +1,64 @@
-# Python cache files
-__pycache__/
-*.py[cod]
-
-# Virtual environments
+# ============================================================
+# Python virtual environments
+# ============================================================
 .venv/
 venv/
+env/
+ENV/
 
-# Jupyter temporary files
+# ============================================================
+# Python cache and compiled files
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ============================================================
+# Jupyter Notebook temporary files
+# ============================================================
 .ipynb_checkpoints/
+.jupyter/
 
-# Local datasets and generated results
-data/*
-!data/README.md
-results/*
-!results/.gitkeep
+# ============================================================
+# VS Code local configuration
+# ============================================================
+.vscode/
+*.code-workspace
 
-# Environment variables
+# ============================================================
+# Environment variables and credentials
+# ============================================================
 .env
+.env.*
+!.env.example
+
+# ============================================================
+# Python build and distribution files
+# ============================================================
+build/
+dist/
+*.egg-info/
+
+# ============================================================
+# Operating system files
+# ============================================================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ============================================================
+# Temporary files and logs
+# ============================================================
+*.tmp
+*.temp
+*.log
+*.bak
+~$*
+
+# ============================================================
+# Local environment backups
+# ============================================================
+requirements-backup.txt
