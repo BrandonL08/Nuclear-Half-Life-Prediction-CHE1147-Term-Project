@@ -39,7 +39,7 @@ The notebooks in the `Models` folder should be run in the following order:
 
 📂 Models/ – Contains machine learning models, training and evaluation. The models are divided into four files: three separate approaches to handling missing data + a comparison of the best models from each   approach. 
 
-📂 Python Scripts/ – Contains supporting Python scripts used throughout the project.
+📂 Python Scripts/ – Contains a copy of the code in script form rather than notebook form.
 
 📄 README.md – Provides an overview of the project and repository.
 
