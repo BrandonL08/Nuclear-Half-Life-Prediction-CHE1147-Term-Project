@@ -50,4 +50,4 @@ The notebooks in the `Models` folder should be run in the following order:
 📄 uv.lock – Records the exact versions of the packages used in the project.
 
 ## Group Members
-Brayden Hutchinson, JinWon Choi, Brandon Lau
+Brayden Hutchinson, Jin Won Choi, Brandon Lau
