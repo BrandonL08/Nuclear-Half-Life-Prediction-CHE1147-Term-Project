@@ -2,7 +2,7 @@
 # CHE1147 Term Project
 
 ## Project Overview
-This project uses machine learning techniques to predict the half-lives of radioisotopes using selected nuclear properties. Multiple models were developed and evaluated to investigate the relationships between nuclear features and radioactive decay. A key focus of this project was investigating different approaches to handling missing data and evaluating their impact on model performance.
+This project uses machine learning techniques to predict the half-lives of radioisotopes using selected nuclear properties. Multiple models were developed and evaluated to investigate the relationships between nuclear features and radioactive decay. A key focus of this project was investigating different approaches to handling missing data and evaluating their impact on model performance. Data for 3,371 isotopes were extracted from the Evaluated Nuclear Structure Data File (ENSDF), courtesy of the Brookhaven National Laboratory and the United States Department of Energy.
 
 ## ⚙️ Installation & Usage
 
