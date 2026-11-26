@@ -4,7 +4,7 @@
 ## Project Overview
 This project uses machine learning techniques to predict the half-lives of radioisotopes using selected nuclear properties. Multiple models were developed and evaluated to investigate the relationships between nuclear features and radioactive decay. A key focus of this project was investigating different approaches to handling missing data and their impact on model performance. These approaches include dropping, including, or imputing missing values. Data for 3,371 isotopes were extracted from the Evaluated Nuclear Structure Data File (ENSDF), courtesy of the Brookhaven National Laboratory and the United States Department of Energy.
 
-## ⚙️ Installation & Usage
+## ⚙️ Installation & Instructions
 
 ### 1. Clone the Repository
 
@@ -16,7 +16,7 @@ cd Nuclear-Half-Life-Prediction-CHE1147-Term-Project
 pip install -r requirements.txt
 ```
 
-### 2. Running the Notebooks
+### 2. Running the Models
 
 The notebooks in the `Models` folder should be run in the following order:
 
@@ -26,11 +26,12 @@ The notebooks in the `Models` folder should be run in the following order:
 4. **Comparison** – Compares the best-performing models from each missing-data approach.
 
 ### 3. Additional Notes
-
-- The cleaned dataset (`cleaned_data.csv`) is already provided, so running the files in the `Extraction` folder is not necessary.
+- Python Scripts were included in a separate folder if you would prefer to run the models that way
+- EDA, and generated figures are included in the `EDA` folder
+- The cleaned dataset (`cleaned_data.csv`) is already provided, so **running the files in the `Extraction` folder is not necessary**.
 - Run the notebooks in the specified order to ensure the comparison notebook has the necessary results.
 
-## 📁 Repository Structure
+## 3. 📁 Repository Structure
 
 📂 EDA/ – Contains notebooks associated with the EDA and data cleaning. Generated figures are included in a sub-folder.
 
