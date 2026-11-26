@@ -34,7 +34,8 @@ Clone the repository and install the required dependencies:
 git clone <repository-url>
 cd <repository-name>
 pip install -r requirements.txt
-'''
+```
+
 
 ## Group Members
 Brayden Hutchinson, JinWon Choi, Brandon Lau
