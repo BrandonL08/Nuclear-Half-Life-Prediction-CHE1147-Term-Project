@@ -26,10 +26,10 @@ The notebooks in the `Models` folder should be run in the following order:
 4. **Comparison** – Compares the best-performing models from each missing-data approach.
 
 ### 3. Additional Notes
-- Python Scripts were included in a separate folder if you would prefer to run the models that way
+- Python Scripts were included in a separate folder. If you choose to run the project using scripts, please refer to the above order and run the scripts this way. 
 - EDA, and generated figures are included in the `EDA` folder
-- The cleaned dataset (`cleaned_data.csv`) is already provided, so **running the files in the `Extraction` folder is not necessary**.
-- Run the notebooks in the specified order to ensure the comparison notebook has the necessary results.
+- The cleaned dataset (`cleaned_data.csv`) is already provided, so **running the files in the `Extraction` folder is not necessary**
+- Run the notebooks in the specified order
 
 ## 3. 📁 Repository Structure
 
