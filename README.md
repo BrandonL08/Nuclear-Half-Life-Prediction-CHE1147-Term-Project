@@ -45,9 +45,9 @@ The notebooks in the `Models` folder should be run in the following order:
 
 📄 requirements.txt – Lists the packages required to run the project.
 
-📄 pyproject.toml – Contains project configuration and dependency information.
+📄 pyproject.toml – Contains configuration information.
 
-📄 uv.lock – Records the exact dependency versions used in the project.
+📄 uv.lock – Records the exact versions of the packages used in the project.
 
 ## Group Members
 Brayden Hutchinson, JinWon Choi, Brandon Lau
