@@ -27,7 +27,7 @@ The notebooks in the `Models` folder should be run in the following order:
 
 ### 3. Additional Notes
 
-- The cleaned dataset (`cleaned_data.csv`) is already provided, so running the files in the `Extraction/` folder is not necessary.
+- The cleaned dataset (`cleaned_data.csv`) is already provided, so running the files in the `Extraction` folder is not necessary.
 - Run the notebooks in the specified order to ensure the comparison notebook has the necessary results.
 
 ## 📁 Repository Structure
