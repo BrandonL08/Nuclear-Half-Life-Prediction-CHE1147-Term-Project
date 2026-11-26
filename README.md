@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 ### 2. Running the Notebooks
 
-The notebooks in the `Models/` folder should be run in the following order:
+The notebooks in the `Models` folder should be run in the following order:
 
 1. **Included_NaN** – Models trained using datasets with missing values retained.
 2. **dropped_NaN** – Models trained after removing records containing missing values.
